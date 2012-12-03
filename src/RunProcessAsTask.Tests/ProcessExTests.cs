@@ -39,8 +39,27 @@ namespace RunProcessAsTask.Tests
                 Assert.IsNotNull(results.StandardError);
 
                 Assert.AreEqual(expectedExitCode, results.Process.ExitCode);
-                Assert.AreEqual(expectedStandardOutputLineCount, results.StandardOutput.Count());
-                Assert.AreEqual(expectedStandardErrorLineCount, results.StandardError.Count());
+                var standardOutputLines = results.StandardOutput.ToArray();
+                var standardErrorLines = results.StandardError.ToArray();
+                Assert.AreEqual(expectedStandardOutputLineCount, standardOutputLines.Length);
+                Assert.AreEqual(expectedStandardErrorLineCount, standardErrorLines.Length);
+
+                var expectedStandardOutput = new[]
+                {
+                    "Standard output line #1",
+                    "Standard output line #2",
+                    "Standard output line #3",
+                    "Standard output line #4",
+                    "Standard output line #5",
+                };
+                var expectedStandardError = new[]
+                {
+                    "Standard error line #1",
+                    "Standard error line #2",
+                    "Standard error line #3",
+                };
+                CollectionAssert.AreEqual(expectedStandardOutput, standardOutputLines);
+                CollectionAssert.AreEqual(expectedStandardError, standardErrorLines);
             }
 
             [TestMethod]

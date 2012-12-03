@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace DummyConsoleApp
 {
@@ -10,8 +11,11 @@ namespace DummyConsoleApp
         static void Main(string[] args)
         {
             int exitCodeToReturn = int.Parse(args[0]);
-            int linesOfStandardOutput = int.Parse(args[1]);
-            int linesOfStandardError = int.Parse(args[2]);
+            int millisecondsToSleep = int.Parse(args[1]);
+            int linesOfStandardOutput = int.Parse(args[2]);
+            int linesOfStandardError = int.Parse(args[3]);
+
+            Thread.Sleep(millisecondsToSleep);
 
             for (int i = 0; i < linesOfStandardOutput; i++)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RunProcessAsTask
@@ -9,6 +10,11 @@ namespace RunProcessAsTask
     {
         // TODO: add support for cancellation and timeout
         public static Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo)
+        {
+            return RunAsync(processStartInfo, CancellationToken.None);
+        }
+
+        public static Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, CancellationToken cancellationToken)
         {
             // force some settings in the start info so we can capture the output
             processStartInfo.UseShellExecute = false;
@@ -43,6 +49,14 @@ namespace RunProcessAsTask
             };
 
             process.Exited += (sender, args) => tcs.TrySetResult(new ProcessResults(process, standardOutput, standardError));
+
+            cancellationToken.Register(() =>
+            {
+                tcs.TrySetCanceled();
+                process.CloseMainWindow();
+            });
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (process.Start() == false)
             {

@@ -8,7 +8,6 @@ namespace RunProcessAsTask
 {
     public static partial class ProcessEx
     {
-        // TODO: add support for cancellation and timeout
         public static Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo)
         {
             return RunAsync(processStartInfo, CancellationToken.None);

@@ -22,10 +22,10 @@ namespace RunProcessAsTask.Tests
                 const int millisecondsToSleep = 0;
                 const int expectedStandardOutputLineCount = 5;
                 const int expectedStandardErrorLineCount = 3;
-
-                // Act
                 var pathToConsoleApp = typeof(DummyConsoleApp.Program).Assembly.Location;
                 var arguments = String.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
+
+                // Act
                 var task = ProcessEx.RunAsync(pathToConsoleApp, arguments);
 
                 // Assert

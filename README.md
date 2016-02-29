@@ -13,18 +13,21 @@ PM> Install-Package RunProcessAsTask
 
 # Example Usages
 
-## Use synchronous, just easier way of grabbing output / error for the process
+## Synchronous, just easier way of grabbing output / error / runtime for the process
 
 ```csharp
 var processResults = ProcessEx.RunAsync("git.exe", "pull").Result;
 
-Console.WriteLine("Exit code: " + processResults.Process.ExitCode);
+Console.WriteLine("Exit code: " + processResults.ExitCode);
+Console.WriteLine("Run time: " + processResults.RunTime);
 
+Console.WriteLine("{0} lines of standard output", processResults.StandardOutput.Length);
 foreach (var output in processResults.StandardOutput)
 {
     Console.WriteLine("Output line: " + output);
 }
 
+Console.WriteLine("{0} lines of standard error", processResults.StandardError.Length);
 foreach (var error in processResults.StandardError)
 {
     Console.WriteLine("Error line: " + error);
@@ -60,17 +63,16 @@ public async Task RunCommandWithTimeout(string filename, string arguments, TimeS
 public async Task ShowLastMatchingCommmit(string regex)
 {
     var logProcessResults = await ProcessEx.RunAsync("git.exe", "log --pretty=oneline --all -n 1 -G" + regex);
-    if (logProcessResults.Process.ExitCode == 0)
+    if (logProcessResults.Process.ExitCode != 0) return;
+
+    var stdoutSplit = logProcessResults.StandardOutput[0].Split(new[] { ' ' }, 2);
+    var commitHash = stdoutSplit[0];
+    var commitMessage = stdoutSplit[1];
+    Console.WriteLine("Last commit matching {0} was {1} and had commit message {2}", regex, commitHash, commitMessage);
+    var showProcessResults = await ProcessEx.RunAsync("git.exe", "show --pretty=fuller " + commitHash);
+    foreach (var stdoutLine in showProcessResults.StandardOutput)
     {
-        var stdoutSplit = logProcessResults.StandardOutput.Single().Split(new[] { ' ' }, 2);
-        var commitHash = stdoutSplit[0];
-        var commitMessage = stdoutSplit[1];
-        Console.WriteLine("Last commit matching {0} was {1} and had commit message {2}", regex, commitHash, commitMessage);
-        var showProcessResults = await ProcessEx.RunAsync("git.exe", "show --pretty=fuller " + commitHash);
-        foreach (var stdoutLine in showProcessResults.StandardOutput)
-        {
-            Console.WriteLine("git show output: " + stdoutLine);
-        }
+        Console.WriteLine("git show output: " + stdoutLine);
     }
 }
 ```

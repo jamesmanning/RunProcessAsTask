@@ -47,7 +47,7 @@ namespace RunProcessAsTask
                 }
             };
 
-            process.Exited += (sender, args) => tcs.TrySetResult(new ProcessResults(process, standardOutput, standardError));
+            process.Exited += (sender, args) => tcs.TrySetResult(new ProcessResults(process, standardOutput.ToArray(), standardError.ToArray()));
 
             cancellationToken.Register(() =>
             {

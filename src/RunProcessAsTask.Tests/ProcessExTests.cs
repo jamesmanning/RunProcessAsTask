@@ -19,7 +19,7 @@ namespace RunProcessAsTask.Tests
             {
                 // Arrange
                 const int expectedExitCode = 123;
-                const int millisecondsToSleep = 0;
+                const int millisecondsToSleep = 5 * 1000; // set a minimum run time so we can validate it as part of the output
                 const int expectedStandardOutputLineCount = 5;
                 const int expectedStandardErrorLineCount = 3;
                 var pathToConsoleApp = typeof(DummyConsoleApp.Program).Assembly.Location;
@@ -38,11 +38,11 @@ namespace RunProcessAsTask.Tests
                 Assert.IsNotNull(results.StandardOutput);
                 Assert.IsNotNull(results.StandardError);
 
+                Assert.AreEqual(expectedExitCode, results.ExitCode);
                 Assert.AreEqual(expectedExitCode, results.Process.ExitCode);
-                var standardOutputLines = results.StandardOutput.ToArray();
-                var standardErrorLines = results.StandardError.ToArray();
-                Assert.AreEqual(expectedStandardOutputLineCount, standardOutputLines.Length);
-                Assert.AreEqual(expectedStandardErrorLineCount, standardErrorLines.Length);
+                Assert.IsTrue(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
+                Assert.AreEqual(expectedStandardOutputLineCount, results.StandardOutput.Length);
+                Assert.AreEqual(expectedStandardErrorLineCount, results.StandardError.Length);
 
                 var expectedStandardOutput = new[]
                 {
@@ -58,8 +58,8 @@ namespace RunProcessAsTask.Tests
                     "Standard error line #2",
                     "Standard error line #3",
                 };
-                CollectionAssert.AreEqual(expectedStandardOutput, standardOutputLines);
-                CollectionAssert.AreEqual(expectedStandardError, standardErrorLines);
+                CollectionAssert.AreEqual(expectedStandardOutput, results.StandardOutput);
+                CollectionAssert.AreEqual(expectedStandardError, results.StandardError);
             }
 
             [TestMethod]

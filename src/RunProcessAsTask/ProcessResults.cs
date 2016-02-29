@@ -9,12 +9,16 @@ namespace RunProcessAsTask
     public class ProcessResults
     {
         private readonly Process _process;
-        private readonly IEnumerable<string> _standardOutput;
-        private readonly IEnumerable<string> _standardError;
+        private readonly string[] _standardOutput;
+        private readonly string[] _standardError;
+        private readonly int _exitCode;
+        private readonly TimeSpan _runTime;
 
-        public ProcessResults(Process process, IEnumerable<string> standardOutput, IEnumerable<string> standardError)
+        public ProcessResults(Process process, string[] standardOutput, string[] standardError)
         {
             _process = process;
+            _exitCode = process.ExitCode;
+            _runTime = process.ExitTime - process.StartTime;
             _standardOutput = standardOutput;
             _standardError = standardError;
         }
@@ -24,12 +28,22 @@ namespace RunProcessAsTask
             get { return _process; }
         }
 
-        public IEnumerable<string> StandardOutput
+        public int ExitCode 
+        {
+            get { return _exitCode; }
+        }
+
+        public TimeSpan RunTime
+        {
+            get { return _runTime; }
+        }
+
+        public string[] StandardOutput
         {
             get { return _standardOutput; }
         }
 
-        public IEnumerable<string> StandardError
+        public string[] StandardError
         {
             get { return _standardError; }
         }

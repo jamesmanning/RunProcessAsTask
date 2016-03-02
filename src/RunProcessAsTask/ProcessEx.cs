@@ -52,7 +52,7 @@ namespace RunProcessAsTask
             cancellationToken.Register(() =>
             {
                 tcs.TrySetCanceled();
-                process.CloseMainWindow();
+                process.Kill();
             });
 
             cancellationToken.ThrowIfCancellationRequested();

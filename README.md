@@ -63,7 +63,7 @@ public async Task RunCommandWithTimeout(string filename, string arguments, TimeS
 public async Task ShowLastMatchingCommmit(string regex)
 {
     var logProcessResults = await ProcessEx.RunAsync("git.exe", "log --pretty=oneline --all -n 1 -G" + regex);
-    if (logProcessResults.Process.ExitCode != 0) return;
+    if (logProcessResults.ExitCode != 0) return;
 
     var stdoutSplit = logProcessResults.StandardOutput[0].Split(new[] { ' ' }, 2);
     var commitHash = stdoutSplit[0];

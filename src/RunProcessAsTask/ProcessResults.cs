@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RunProcessAsTask
 {
-    public class ProcessResults
+    public class ProcessResults : IDisposable
     {
         private readonly Process _process;
         private readonly string[] _standardOutput;
@@ -46,6 +46,11 @@ namespace RunProcessAsTask
         public string[] StandardError
         {
             get { return _standardError; }
+        }
+
+        public void Dispose()
+        {
+            _process.Dispose();
         }
     }
 }

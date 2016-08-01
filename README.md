@@ -60,7 +60,7 @@ public async Task RunCommandWithTimeout(string filename, string arguments, TimeS
 ## Run multiple commands with dependencies in an async fashion
 
 ```csharp
-public async Task ShowLastMatchingCommmit(string regex)
+public async Task ShowLastMatchingCommit(string regex)
 {
     var logProcessResults = await ProcessEx.RunAsync("git.exe", "log --pretty=oneline --all -n 1 -G" + regex);
     if (logProcessResults.ExitCode != 0) return;

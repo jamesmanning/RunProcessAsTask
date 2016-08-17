@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace RunProcessAsTask.Tests
 {
     public static class ProcessExTests
     {
-        [TestClass]
         public class RunAsyncTests
         {
-            [TestMethod]
+            [Fact]
             public void WhenProcessRunsNormally_ReturnsExpectedResults()
             {
                 // Arrange
@@ -29,20 +26,20 @@ namespace RunProcessAsTask.Tests
                 var task = ProcessEx.RunAsync(pathToConsoleApp, arguments);
 
                 // Assert
-                Assert.IsNotNull(task);
+                Assert.NotNull(task);
                 var results = task.Result;
-                Assert.IsNotNull(results);
-                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-                Assert.IsNotNull(results.Process);
-                Assert.IsTrue(results.Process.HasExited);
-                Assert.IsNotNull(results.StandardOutput);
-                Assert.IsNotNull(results.StandardError);
+                Assert.NotNull(results);
+                Assert.Equal(TaskStatus.RanToCompletion, task.Status);
+                Assert.NotNull(results.Process);
+                Assert.True(results.Process.HasExited);
+                Assert.NotNull(results.StandardOutput);
+                Assert.NotNull(results.StandardError);
 
-                Assert.AreEqual(expectedExitCode, results.ExitCode);
-                Assert.AreEqual(expectedExitCode, results.Process.ExitCode);
-                Assert.IsTrue(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
-                Assert.AreEqual(expectedStandardOutputLineCount, results.StandardOutput.Length);
-                Assert.AreEqual(expectedStandardErrorLineCount, results.StandardError.Length);
+                Assert.Equal(expectedExitCode, results.ExitCode);
+                Assert.Equal(expectedExitCode, results.Process.ExitCode);
+                Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
+                Assert.Equal(expectedStandardOutputLineCount, results.StandardOutput.Length);
+                Assert.Equal(expectedStandardErrorLineCount, results.StandardError.Length);
 
                 var expectedStandardOutput = new[]
                 {
@@ -58,13 +55,24 @@ namespace RunProcessAsTask.Tests
                     "Standard error line #2",
                     "Standard error line #3",
                 };
-                CollectionAssert.AreEqual(expectedStandardOutput, results.StandardOutput);
-                CollectionAssert.AreEqual(expectedStandardError, results.StandardError);
+                Assert.Equal(expectedStandardOutput, results.StandardOutput);
+                Assert.Equal(expectedStandardError, results.StandardError);
             }
 
-            [TestMethod]
+            [Fact]
             public void RunLotsOfOutputForOneHour()
             {
+                // NOTE: we could get 'native' skip support here using https://www.nuget.org/packages/Xunit.SkippableFact/
+                // but it felt like overkill for this one-off case of just wanting to avoid a long-running CI test
+
+                // we can rely on travis-ci to set this environment variable
+                // see https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
+                if (Environment.GetEnvironmentVariable("CONTINUOUS_INTEGRATION") != "true")
+                {
+                    // only want to run this on our CI environment since it takes so long
+                    return;
+                }
+
                 // if it can run for an hour and not cause the output-truncation issue, we are probably fine
                 //for (int i = 0; i < 1000; i++)
                 var oneHour = TimeSpan.FromHours(1);
@@ -76,7 +84,7 @@ namespace RunProcessAsTask.Tests
 
             private readonly Random _random = new Random();
 
-            [TestMethod]
+            [Fact]
             public void WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly()
             {
                 // Arrange
@@ -91,20 +99,20 @@ namespace RunProcessAsTask.Tests
                 var task = ProcessEx.RunAsync(pathToConsoleApp, arguments);
 
                 // Assert
-                Assert.IsNotNull(task);
+                Assert.NotNull(task);
                 var results = task.Result;
-                Assert.IsNotNull(results);
-                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-                Assert.IsNotNull(results.Process);
-                Assert.IsTrue(results.Process.HasExited);
-                Assert.IsNotNull(results.StandardOutput);
-                Assert.IsNotNull(results.StandardError);
+                Assert.NotNull(results);
+                Assert.Equal(TaskStatus.RanToCompletion, task.Status);
+                Assert.NotNull(results.Process);
+                Assert.True(results.Process.HasExited);
+                Assert.NotNull(results.StandardOutput);
+                Assert.NotNull(results.StandardError);
 
-                Assert.AreEqual(expectedExitCode, results.ExitCode);
-                Assert.AreEqual(expectedExitCode, results.Process.ExitCode);
-                Assert.IsTrue(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
-                Assert.AreEqual(expectedStandardOutputLineCount, results.StandardOutput.Length);
-                Assert.AreEqual(expectedStandardErrorLineCount, results.StandardError.Length);
+                Assert.Equal(expectedExitCode, results.ExitCode);
+                Assert.Equal(expectedExitCode, results.Process.ExitCode);
+                Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
+                Assert.Equal(expectedStandardOutputLineCount, results.StandardOutput.Length);
+                Assert.Equal(expectedStandardErrorLineCount, results.StandardError.Length);
 
                 var expectedStandardOutput = Enumerable.Range(1, expectedStandardOutputLineCount)
                     .Select(x => "Standard output line #" + x)
@@ -112,11 +120,11 @@ namespace RunProcessAsTask.Tests
                 var expectedStandardError = Enumerable.Range(1, expectedStandardErrorLineCount)
                     .Select(x => "Standard error line #" + x)
                     .ToArray();
-                CollectionAssert.AreEqual(expectedStandardOutput, results.StandardOutput);
-                CollectionAssert.AreEqual(expectedStandardError, results.StandardError);
+                Assert.Equal(expectedStandardOutput, results.StandardOutput);
+                Assert.Equal(expectedStandardError, results.StandardError);
             }
 
-            [TestMethod]
+            [Fact]
             public void WhenProcessTimesOut_TaskIsCanceled()
             {
                 // Arrange
@@ -132,25 +140,16 @@ namespace RunProcessAsTask.Tests
                 var startInfo = new ProcessStartInfo(pathToConsoleApp, arguments);
                 var cancellationToken = new CancellationTokenSource(millisecondsForTimeout).Token;
                 var task = ProcessEx.RunAsync(startInfo, cancellationToken);
+                Assert.NotNull(task);
 
                 // Assert
-                Assert.IsNotNull(task);
-                try
-                {
-                    var results = task.Result;
-                    Assert.Fail("Timeout did not occur");
-                }
-                catch (AggregateException aggregateException)
-                {
-                    // expected
-                    Assert.AreEqual(1, aggregateException.InnerExceptions.Count);
-                    var innerException = aggregateException.InnerExceptions.Single();
-                    Assert.IsInstanceOfType(innerException, typeof(OperationCanceledException));
-                    var canceledException = innerException as OperationCanceledException;
-                    Assert.IsNotNull(canceledException);
-                    Assert.IsTrue(cancellationToken.IsCancellationRequested);
-                }
-                Assert.AreEqual(TaskStatus.Canceled, task.Status);
+                var aggregateException = Assert.Throws<AggregateException>(() => task.Result);
+                Assert.Equal(1, aggregateException.InnerExceptions.Count);
+                var innerException = aggregateException.InnerExceptions.Single();
+                var canceledException = Assert.IsType<TaskCanceledException>(innerException);
+                Assert.NotNull(canceledException);
+                Assert.True(cancellationToken.IsCancellationRequested);
+                Assert.Equal(TaskStatus.Canceled, task.Status);
             }
         }
     }

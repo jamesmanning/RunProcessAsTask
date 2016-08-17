@@ -60,23 +60,13 @@ namespace RunProcessAsTask.Tests
             }
 
             [Fact]
-            public void RunLotsOfOutputForOneHour()
+            public void RunLotsOfOutputForFiveMinutes()
             {
-                // NOTE: we could get 'native' skip support here using https://www.nuget.org/packages/Xunit.SkippableFact/
-                // but it felt like overkill for this one-off case of just wanting to avoid a long-running CI test
-
-                // we can rely on travis-ci to set this environment variable
-                // see https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
-                if (Environment.GetEnvironmentVariable("CONTINUOUS_INTEGRATION") != "true")
-                {
-                    // only want to run this on our CI environment since it takes so long
-                    return;
-                }
-
-                // if it can run for an hour and not cause the output-truncation issue, we are probably fine
-                //for (int i = 0; i < 1000; i++)
-                var oneHour = TimeSpan.FromHours(1);
-                for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < oneHour; )
+                // when this problem manifested with the older code, it would normally 
+                // trigger in this test within 5 to 10 seconds, so if it can run for 
+                // 5 minutes and not cause the output-truncation issue, we are probably fine
+                var fiveMinutes = TimeSpan.FromMinutes(5);
+                for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < fiveMinutes; )
                 {
                     WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly();
                 }

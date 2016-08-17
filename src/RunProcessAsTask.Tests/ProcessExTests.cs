@@ -63,6 +63,60 @@ namespace RunProcessAsTask.Tests
             }
 
             [TestMethod]
+            public void RunLotsOfOutputForOneHour()
+            {
+                // if it can run for an hour and not cause the output-truncation issue, we are probably fine
+                //for (int i = 0; i < 1000; i++)
+                var oneHour = TimeSpan.FromHours(1);
+                for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < oneHour; )
+                {
+                    WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly();
+                }
+            }
+
+            private readonly Random _random = new Random();
+
+            [TestMethod]
+            public void WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly()
+            {
+                // Arrange
+                const int expectedExitCode = 123;
+                const int millisecondsToSleep = 0; // We want the process to exit right after printing the lines, so no wait time
+                int expectedStandardOutputLineCount = _random.Next(1000, 100 * 1000);
+                int expectedStandardErrorLineCount = _random.Next(1000, 100 * 1000);
+                var pathToConsoleApp = typeof(DummyConsoleApp.Program).Assembly.Location;
+                var arguments = String.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
+
+                // Act
+                var task = ProcessEx.RunAsync(pathToConsoleApp, arguments);
+
+                // Assert
+                Assert.IsNotNull(task);
+                var results = task.Result;
+                Assert.IsNotNull(results);
+                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+                Assert.IsNotNull(results.Process);
+                Assert.IsTrue(results.Process.HasExited);
+                Assert.IsNotNull(results.StandardOutput);
+                Assert.IsNotNull(results.StandardError);
+
+                Assert.AreEqual(expectedExitCode, results.ExitCode);
+                Assert.AreEqual(expectedExitCode, results.Process.ExitCode);
+                Assert.IsTrue(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
+                Assert.AreEqual(expectedStandardOutputLineCount, results.StandardOutput.Length);
+                Assert.AreEqual(expectedStandardErrorLineCount, results.StandardError.Length);
+
+                var expectedStandardOutput = Enumerable.Range(1, expectedStandardOutputLineCount)
+                    .Select(x => "Standard output line #" + x)
+                    .ToArray();
+                var expectedStandardError = Enumerable.Range(1, expectedStandardErrorLineCount)
+                    .Select(x => "Standard error line #" + x)
+                    .ToArray();
+                CollectionAssert.AreEqual(expectedStandardOutput, results.StandardOutput);
+                CollectionAssert.AreEqual(expectedStandardError, results.StandardError);
+            }
+
+            [TestMethod]
             public void WhenProcessTimesOut_TaskIsCanceled()
             {
                 // Arrange

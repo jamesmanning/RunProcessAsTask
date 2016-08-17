@@ -31,23 +31,43 @@ namespace RunProcessAsTask
                 EnableRaisingEvents = true
             };
 
+            var outputDataClosed = new ManualResetEventSlim();
             process.OutputDataReceived += (sender, args) =>
             {
                 if (args.Data != null)
                 {
                     standardOutput.Add(args.Data);
                 }
+                else
+                {
+                    outputDataClosed.Set();
+                }
             };
 
+            var errorDataClosed = new ManualResetEventSlim();
             process.ErrorDataReceived += (sender, args) =>
             {
                 if (args.Data != null)
                 {
                     standardError.Add(args.Data);
                 }
+                else
+                {
+                    errorDataClosed.Set();
+                }
             };
 
-            process.Exited += (sender, args) => tcs.TrySetResult(new ProcessResults(process, standardOutput.ToArray(), standardError.ToArray()));
+            process.Exited += (sender, args) =>
+            {
+                // Since the Exited event can happen asynchronously to the output and error events, 
+                // we wait on both of output and error being signaled as closed by our handlers to 
+                // ensure we don't lose any of the data being written to them
+                outputDataClosed.Wait(cancellationToken);
+                errorDataClosed.Wait(cancellationToken);
+
+                // now that we know both output and error have closed, we can safely proceed with serializing the arrays
+                tcs.TrySetResult(new ProcessResults(process, standardOutput.ToArray(), standardError.ToArray()));
+            };
 
             cancellationToken.Register(() =>
             {

@@ -61,9 +61,15 @@ namespace RunProcessAsTask
             {
                 // Since the Exited event can happen asynchronously to the output and error events, 
                 // we wait on both of output and error being signaled as closed by our handlers to 
-                // ensure we don't lose any of the data being written to them
-                outputDataClosed.Wait(cancellationToken);
-                errorDataClosed.Wait(cancellationToken);
+                // ensure we don't lose any of the data being written to them.  We use 'using' on them
+                // to help ensure they are disposed once we're done waiting for them, even if they
+                // throw due to cancellation
+                using (outputDataClosed)
+                using (errorDataClosed)
+                {
+                    outputDataClosed.Wait(cancellationToken);
+                    errorDataClosed.Wait(cancellationToken);
+                }
 
                 // now that we know both output and error have closed, we can safely proceed with serializing the arrays
                 tcs.TrySetResult(new ProcessResults(process, standardOutput.ToArray(), standardError.ToArray()));

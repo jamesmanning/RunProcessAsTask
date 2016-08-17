@@ -31,7 +31,7 @@ namespace RunProcessAsTask
                 EnableRaisingEvents = true
             };
 
-            var outputDataClosed = new ManualResetEventSlim();
+            var standardOutputResults = new TaskCompletionSource<string[]>();
             process.OutputDataReceived += (sender, args) =>
             {
                 if (args.Data != null)
@@ -40,11 +40,11 @@ namespace RunProcessAsTask
                 }
                 else
                 {
-                    outputDataClosed.Set();
+                    standardOutputResults.SetResult(standardOutput.ToArray());
                 }
             };
 
-            var errorDataClosed = new ManualResetEventSlim();
+            var standardErrorResults = new TaskCompletionSource<string[]>();
             process.ErrorDataReceived += (sender, args) =>
             {
                 if (args.Data != null)
@@ -53,26 +53,15 @@ namespace RunProcessAsTask
                 }
                 else
                 {
-                    errorDataClosed.Set();
+                    standardErrorResults.SetResult(standardError.ToArray());
                 }
             };
 
             process.Exited += (sender, args) =>
             {
                 // Since the Exited event can happen asynchronously to the output and error events, 
-                // we wait on both of output and error being signaled as closed by our handlers to 
-                // ensure we don't lose any of the data being written to them.  We use 'using' on them
-                // to help ensure they are disposed once we're done waiting for them, even if they
-                // throw due to cancellation
-                using (outputDataClosed)
-                using (errorDataClosed)
-                {
-                    outputDataClosed.Wait(cancellationToken);
-                    errorDataClosed.Wait(cancellationToken);
-                }
-
-                // now that we know both output and error have closed, we can safely proceed with serializing the arrays
-                tcs.TrySetResult(new ProcessResults(process, standardOutput.ToArray(), standardError.ToArray()));
+                // we use the task results for stdout/stderr to ensure they both closed
+                tcs.TrySetResult(new ProcessResults(process, standardOutputResults.Task.Result, standardErrorResults.Task.Result));
             };
 
             cancellationToken.Register(() =>

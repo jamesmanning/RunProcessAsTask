@@ -84,9 +84,14 @@ namespace RunProcessAsTask.Tests
                 int expectedStandardErrorLineCount = _random.Next(1000, 100 * 1000);
                 var pathToConsoleApp = typeof(DummyConsoleApp.Program).Assembly.Location;
                 var arguments = String.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
-
+                // force no window since there's no value in showing it during a test run
+                var processStartInfo = new ProcessStartInfo(pathToConsoleApp, arguments)
+                {
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                };
                 // Act
-                var task = ProcessEx.RunAsync(pathToConsoleApp, arguments);
+                var task = ProcessEx.RunAsync(processStartInfo);
 
                 // Assert
                 Assert.NotNull(task);

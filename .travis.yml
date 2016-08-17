@@ -2,4 +2,4 @@ language: csharp
 solution: src/RunProcessAsTask.sln
 script:
   - xbuild /p:Configuration=Release src/RunProcessAsTask.sln
-  - mono ./packages/xunit.runners.*/tools/xunit.console.clr4.exe ./src/RunProcessAsTask/bin/Release/RunProcessAsTask.dll
+  - mono ./src/packages/xunit.runners.*/tools/xunit.console.clr4.exe ./src/RunProcessAsTask/bin/Release/RunProcessAsTask.dll

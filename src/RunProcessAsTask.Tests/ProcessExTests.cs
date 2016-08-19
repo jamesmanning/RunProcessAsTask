@@ -95,6 +95,7 @@ namespace RunProcessAsTask.Tests
                     {
                         Debug.WriteLine($"Failed in {stopwatch.Elapsed.TotalSeconds:F0} seconds: {exception}");
                         Console.WriteLine($"Failed in {stopwatch.Elapsed.TotalSeconds:F0} seconds: {exception}");
+                        return;
                     }
                 }
                 Assert.True(false, $"process never failed in {maxLengthOfTimeToRun}");

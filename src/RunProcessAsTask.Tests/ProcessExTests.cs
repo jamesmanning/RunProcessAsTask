@@ -77,6 +77,13 @@ namespace RunProcessAsTask.Tests
                 }
             }
 
+            private void Log(string message)
+            {
+                Debug.WriteLine($"debug: {message}");
+                Console.WriteLine($"stdout: {message}");
+                Console.Error.WriteLine($"stderr: {message}");
+            }
+
             private void PrintFailureTime(TimeSpan maxLengthOfTimeToRun)
             {
                 var stopwatch = Stopwatch.StartNew();
@@ -86,8 +93,7 @@ namespace RunProcessAsTask.Tests
                     {
                         // need to print something during the time we're waiting for a failure so
                         // Travis doesn't kill the test because of 10 minutes of no build output
-                        Debug.WriteLine($"Performing run number {runNumber}");
-                        Console.WriteLine($"Performing run number {runNumber}");
+                        Log($"Performing run number {runNumber}");
                         Parallel.ForEach(Enumerable.Range(1, 100), index => WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly());
                         //WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly();
                     }

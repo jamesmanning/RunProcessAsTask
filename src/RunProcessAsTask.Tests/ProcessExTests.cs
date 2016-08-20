@@ -59,7 +59,7 @@ namespace RunProcessAsTask.Tests
                 Assert.Equal(expectedStandardError, results.StandardError);
             }
 
-            [Fact]
+            [Fact(Skip = "disable while getting code coverage working for faster testing")]
             public void RunLotsOfOutputForFiveMinutes()
             {
                 // when this problem manifested with the older code, it would normally 

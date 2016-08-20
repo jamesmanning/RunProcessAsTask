@@ -16,7 +16,7 @@ test_script:
 - ps: >-
     $xunitConsoleRunner = (Resolve-Path "src/packages/xunit.runner.console.*/tools/xunit.console.exe").ToString()
     
-    .\src\packages\OpenCover.*\tools\OpenCover.Console.exe -register:user -target:$xunitConsoleRunner "-targetargs:""src\RunProcessAsTask.Tests\bin\$env:CONFIGURATION\RunProcessAsTask.Tests.dll"" /noshadow /appveyor" -filter:"+[RunProcessAsTask*]*" -output:opencoverCoverage.xml
+    .\src\packages\OpenCover.*\tools\OpenCover.Console.exe -register:user -target:$xunitConsoleRunner "-targetargs:""src\RunProcessAsTask.Tests\bin\$env:CONFIGURATION\RunProcessAsTask.Tests.dll"" /appveyor" -filter:"+[RunProcessAsTask*]*" -output:opencoverCoverage.xml
 
     $coveralls = (Resolve-Path "src/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 

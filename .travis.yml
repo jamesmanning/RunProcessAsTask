@@ -19,6 +19,9 @@ script:
   - xbuild /p:Configuration=Release ./src/RunProcessAsTask.sln
   - export LD_LIBRARY_PATH=/usr/local/lib
   - mono ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll
+  - mono ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll /noshadow
+  - mono --debug ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll /noshadow
+  - mono --debug --profile=monocov ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll /noshadow
   - mono --debug --profile=monocov:outfile=monocovCoverage.cov ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll /noshadow
   - cat monocovCoverage.cov
   - monocov --export-xml=monocovCoverage monocovCoverage.cov

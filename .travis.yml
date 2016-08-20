@@ -2,7 +2,7 @@ language: csharp
 solution: ./src/RunProcessAsTask.sln
 install:
   - nuget restore ./src/RunProcessAsTask.sln
-  - chmod +x ./src/packages/xunit.runner.console.*/tools/xunit.console.exe
+  - chmod +x ./src/packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe
   - sudo apt-get install gtk-sharp2
   - curl -sS https://api.nuget.org/packages/mono.cecil.0.9.5.4.nupkg > /tmp/mono.cecil.0.9.5.4.nupkg.zip
   - unzip /tmp/mono.cecil.0.9.5.4.nupkg.zip -d /tmp/cecil
@@ -18,8 +18,7 @@ install:
 script:
   - xbuild /p:Configuration=Release ./src/RunProcessAsTask.sln
   - export LD_LIBRARY_PATH=/usr/local/lib
-  - mono ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll
-  - mono --debug --profile=monocov:outfile=monocovCoverage.cov,+[RunProcessAsTask],+[RunProcessAsTask.Tests] ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll
+  - mono --debug --profile=monocov:outfile=monocovCoverage.cov,+[RunProcessAsTask],+[RunProcessAsTask.Tests] ./src/packages/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll  /noshadow
   - cat monocovCoverage.cov
   - monocov --export-xml=monocovCoverage monocovCoverage.cov
   - REPO_COMMIT_AUTHOR=$(git show -s --pretty=format:"%cn")
@@ -31,4 +30,4 @@ script:
   - echo $REPO_COMMIT_AUTHOR_EMAIL
   - echo $REPO_COMMIT_MESSAGE
   - echo $TRAVIS_JOB_ID
-  - mono ./src/packages/coveralls.net.*/tools/csmacnz.Coveralls.exe --monocov -i ./monocovCoverage --repoToken $COVERALLS_REPO_TOKEN --commitId $TRAVIS_COMMIT --commitBranch $TRAVIS_BRANCH --commitAuthor "$REPO_COMMIT_AUTHOR" --commitEmail "$REPO_COMMIT_AUTHOR_EMAIL" --commitMessage "$REPO_COMMIT_MESSAGE" --jobId $TRAVIS_JOB_ID  --serviceName "travis-ci"  --useRelativePaths
+  - mono ./src/packages/coveralls.net.0.6.0/tools/csmacnz.Coveralls.exe --monocov -i ./monocovCoverage --repoToken $COVERALLS_REPO_TOKEN --commitId $TRAVIS_COMMIT --commitBranch $TRAVIS_BRANCH --commitAuthor "$REPO_COMMIT_AUTHOR" --commitEmail "$REPO_COMMIT_AUTHOR_EMAIL" --commitMessage "$REPO_COMMIT_MESSAGE" --jobId $TRAVIS_JOB_ID  --serviceName "travis-ci"  --useRelativePaths

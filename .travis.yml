@@ -1,7 +1,8 @@
 language: csharp
-solution: src/RunProcessAsTask.sln
+solution: ./src/RunProcessAsTask.sln
 install:
   - nuget restore ./src/RunProcessAsTask.sln
+  - chmod +x ./src/packages/xunit.runner.console.*/tools/xunit.console.exe
   - sudo apt-get install gtk-sharp2
   - curl -sS https://api.nuget.org/packages/mono.cecil.0.9.5.4.nupkg > /tmp/mono.cecil.0.9.5.4.nupkg.zip
   - unzip /tmp/mono.cecil.0.9.5.4.nupkg.zip -d /tmp/cecil
@@ -15,7 +16,7 @@ install:
   - sudo make install
   - cd ../../jamesmanning/RunProcessAsTask
 script:
-  - xbuild /p:Configuration=Release src/RunProcessAsTask.sln
+  - xbuild /p:Configuration=Release ./src/RunProcessAsTask.sln
   - export LD_LIBRARY_PATH=/usr/local/lib
   - mono --debug --profile=monocov:outfile=monocovCoverage.cov,+[RunProcessAsTask],+[RunProcessAsTask.Tests] ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll /noshadow
   - monocov --export-xml=monocovCoverage monocovCoverage.cov

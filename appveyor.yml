@@ -15,9 +15,13 @@ build:
 test_script:
 - ps: >-
     $xunit              = (Resolve-Path "src/packages/xunit.runner.console.*/tools/xunit.console.exe").ToString()
+    
     $opencover          = (Resolve-Path ".\src\packages\OpenCover.*\tools\OpenCover.Console.exe").ToString()
+    
     $coveralls          = (Resolve-Path "src/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+    
     $assemblies         = (Resolve-Path "src\RunProcessAsTask.Tests\bin\$env:CONFIGURATION\RunProcessAsTask.Tests.dll").ToString()
+    
     $filters            = "+[RunProcessAsTask*]*"
     
     & $opencover "-register:user" "-target:$xunit" "-targetargs:$assemblies -noshadow -appveyor" "-filter:$filters" "-output:opencoverCoverage.xml"

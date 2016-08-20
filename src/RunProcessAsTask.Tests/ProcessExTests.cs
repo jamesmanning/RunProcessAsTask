@@ -68,7 +68,7 @@ namespace RunProcessAsTask.Tests
                 var fiveMinutes = TimeSpan.FromMinutes(5);
                 for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < fiveMinutes; )
                 {
-                    WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly();
+                    Parallel.ForEach(Enumerable.Range(1, 100), index => WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly());
                 }
             }
 

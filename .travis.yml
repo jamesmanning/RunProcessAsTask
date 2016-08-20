@@ -20,6 +20,7 @@ script:
   - export LD_LIBRARY_PATH=/usr/local/lib
   - mono ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll
   - mono --debug --profile=monocov:outfile=monocovCoverage.cov,+[RunProcessAsTask],+[RunProcessAsTask.Tests] ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll /noshadow
+  - cat monocovCoverage.cov
   - monocov --export-xml=monocovCoverage monocovCoverage.cov
   - REPO_COMMIT_AUTHOR=$(git show -s --pretty=format:"%cn")
   - REPO_COMMIT_AUTHOR_EMAIL=$(git show -s --pretty=format:"%ce")

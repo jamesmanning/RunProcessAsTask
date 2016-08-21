@@ -101,6 +101,11 @@ namespace RunProcessAsTask.Tests
                         Log($"Failed in {stopwatch.Elapsed.TotalSeconds:F0} seconds: {aggregateException.InnerExceptions[0].Message}");
                         return;
                     }
+                    catch (Exception exception)
+                    {
+                        Log($"Failed in {stopwatch.Elapsed.TotalSeconds:F0} seconds: {exception.Message}");
+                        return;
+                    }
                 }
                 Assert.True(false, $"process never failed in {maxLengthOfTimeToRun}");
             }

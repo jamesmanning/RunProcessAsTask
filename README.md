@@ -5,9 +5,10 @@ RunProcessAsTask
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jamesmanning/RunProcessAsTask)](https://ci.appveyor.com/project/jamesmanning/RunProcessAsTask)
 [![Coverage Status](https://coveralls.io/repos/github/jamesmanning/RunProcessAsTask/badge.svg?branch=master)](https://coveralls.io/github/jamesmanning/RunProcessAsTask?branch=master)
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/jamesmanning/RunProcessAsTask/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/jamesmanning/RunProcessAsTask.svg)](https://github.com/jamesmanning/RunProcessAsTask/issues)
 [![GitHub stars](https://img.shields.io/github/stars/jamesmanning/RunProcessAsTask.svg)](https://github.com/jamesmanning/RunProcessAsTask/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/jamesmanning/RunProcessAsTask.svg)](https://github.com/jamesmanning/RunProcessAsTask/network)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/jamesmanning/RunProcessAsTask/master/LICENSE)
 
 Simple wrapper around [System.Diagnostics.Process](http://msdn.microsoft.com/en-us/library/system.diagnostics.process.aspx) to expose it as a [System.Threading.Tasks.Task](http://msdn.microsoft.com/en-us/library/system.threading.tasks.task.aspx)<[ProcessResults](https://github.com/jamesmanning/RunProcessAsTask/blob/master/src/RunProcessAsTask/ProcessResults.cs)>
 

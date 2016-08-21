@@ -62,6 +62,11 @@ namespace RunProcessAsTask.Tests
             [Fact]
             public void PrintFailureTimeNumbers()
             {
+
+                AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+                {
+                    Console.WriteLine($"Unhandled exception, Terminating={args.IsTerminating} Exception={args.ExceptionObject}");
+                };
                 // NOTE: we could get 'native' skip support here using https://www.nuget.org/packages/Xunit.SkippableFact/
                 // but it felt like overkill for this one-off case of just wanting to avoid a long-running CI test
 
@@ -79,9 +84,9 @@ namespace RunProcessAsTask.Tests
 
             private void Log(string message)
             {
-                Debug.WriteLine($"debug: {message}");
+                //Debug.WriteLine($"debug: {message}");
                 Console.WriteLine($"stdout: {message}");
-                Console.Error.WriteLine($"stderr: {message}");
+                //Console.Error.WriteLine($"stderr: {message}");
             }
 
             private void PrintFailureTime(TimeSpan maxLengthOfTimeToRun)
@@ -93,7 +98,7 @@ namespace RunProcessAsTask.Tests
                     {
                         // need to print something during the time we're waiting for a failure so
                         // Travis doesn't kill the test because of 10 minutes of no build output
-                        Log($"Performing run number {runNumber}");
+                        //Log($"Performing run number {runNumber}");
                         Parallel.ForEach(Enumerable.Range(1, 100), index => WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly());
                     }
                     catch (AggregateException aggregateException)

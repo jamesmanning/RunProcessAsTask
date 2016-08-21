@@ -71,7 +71,7 @@ namespace RunProcessAsTask.Tests
                 //for (int i = 0; i < 100; i++)
                 {
                     var maxLengthOfTimeToRun = runningInCIEnvironment
-                        ? TimeSpan.FromHours(1)
+                        ? TimeSpan.FromMinutes(2)
                         : TimeSpan.FromMinutes(1);
                     PrintFailureTime(maxLengthOfTimeToRun);
                 }

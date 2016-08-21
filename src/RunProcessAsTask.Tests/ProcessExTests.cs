@@ -68,7 +68,7 @@ namespace RunProcessAsTask.Tests
                 // we can rely on travis-ci to set this environment variable
                 // see https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
                 var runningInCIEnvironment = Environment.GetEnvironmentVariable("CONTINUOUS_INTEGRATION") == "true";
-                //for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 5; i++)
                 {
                     var maxLengthOfTimeToRun = runningInCIEnvironment
                         ? TimeSpan.FromMinutes(2)

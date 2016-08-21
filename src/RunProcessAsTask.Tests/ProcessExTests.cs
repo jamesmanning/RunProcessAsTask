@@ -95,12 +95,10 @@ namespace RunProcessAsTask.Tests
                         // Travis doesn't kill the test because of 10 minutes of no build output
                         Log($"Performing run number {runNumber}");
                         Parallel.ForEach(Enumerable.Range(1, 100), index => WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly());
-                        //WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly();
                     }
-                    catch (Exception exception)
+                    catch (AggregateException aggregateException)
                     {
-                        Debug.WriteLine($"Failed in {stopwatch.Elapsed.TotalSeconds:F0} seconds: {exception}");
-                        Console.WriteLine($"Failed in {stopwatch.Elapsed.TotalSeconds:F0} seconds: {exception}");
+                        Log($"Failed in {stopwatch.Elapsed.TotalSeconds:F0} seconds: {aggregateException.InnerExceptions[0].Message}");
                         return;
                     }
                 }

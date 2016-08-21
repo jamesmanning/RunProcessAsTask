@@ -2,4 +2,4 @@ language: csharp
 solution: src/RunProcessAsTask.sln
 script:
   - xbuild /p:Configuration=Release src/RunProcessAsTask.sln
-  - mono ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll
+  - mono ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll /noshadow

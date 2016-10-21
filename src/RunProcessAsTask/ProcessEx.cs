@@ -13,7 +13,7 @@ namespace RunProcessAsTask
             return RunAsync(processStartInfo, CancellationToken.None);
         }
 
-        public static Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, CancellationToken cancellationToken)
+        public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, CancellationToken cancellationToken)
         {
             // force some settings in the start info so we can capture the output
             processStartInfo.UseShellExecute = false;
@@ -64,23 +64,31 @@ namespace RunProcessAsTask
                 tcs.TrySetResult(new ProcessResults(process, standardOutputResults.Task.Result, standardErrorResults.Task.Result));
             };
 
-            cancellationToken.Register(() =>
+            using (cancellationToken.Register(() =>
+             {
+                 tcs.TrySetCanceled();
+                 try
+                 {
+                     if (!process.HasExited)
+                     {
+                         process.Kill();
+                     }
+                 }
+                 catch(InvalidOperationException) { }
+             }))
             {
-                tcs.TrySetCanceled();
-                process.Kill();
-            });
+                cancellationToken.ThrowIfCancellationRequested();
 
-            cancellationToken.ThrowIfCancellationRequested();
+                if (process.Start() == false)
+                {
+                    tcs.TrySetException(new InvalidOperationException("Failed to start process"));
+                }
 
-            if (process.Start() == false)
-            {
-                tcs.TrySetException(new InvalidOperationException("Failed to start process"));
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                return await tcs.Task;
             }
-
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            return tcs.Task;
         }
     }
 }

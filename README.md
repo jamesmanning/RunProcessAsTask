@@ -60,6 +60,7 @@ public async Task RunCommandWithTimeout(string filename, string arguments, TimeS
     try
     {
         var processResults = await ProcessEx.RunAsync(processStartInfo, cancellationTokenSource.Token);
+        cancellationTokenSource.dispose();
     }
     catch (OperationCanceledException)
     {

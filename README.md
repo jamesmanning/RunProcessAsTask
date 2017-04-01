@@ -50,8 +50,6 @@ foreach (var error in processResults.StandardError)
 ```csharp
 public async Task RunCommandWithTimeout(string filename, string arguments, TimeSpan timeout)
 {
-    var cancellationTokenSource = new CancellationTokenSource(timeout);
-
     var processStartInfo = new ProcessStartInfo
     {
         FileName = filename,
@@ -59,7 +57,10 @@ public async Task RunCommandWithTimeout(string filename, string arguments, TimeS
     };
     try
     {
-        var processResults = await ProcessEx.RunAsync(processStartInfo, cancellationTokenSource.Token);
+        using (var cancellationTokenSource = new CancellationTokenSource(timeout))
+        {
+            var processResults = await ProcessEx.RunAsync(processStartInfo, cancellationTokenSource.Token);
+        }
     }
     catch (OperationCanceledException)
     {

@@ -1,16 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
-
+  
+  
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.2.0" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Include="ProcessExTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\DummyConsoleApp\DummyConsoleApp.csproj">
       <Project>{5a69a310-51df-401c-8625-7c2c688aa8c2}</Project>

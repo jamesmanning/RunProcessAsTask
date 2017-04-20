@@ -4,10 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunProcessAsTask", "RunProcessAsTask\RunProcessAsTask.csproj", "{43EED81F-84FB-4A81-9496-26B3BB0263EC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5A69A310-51DF-401C-8625-7C2C688AA8C2} = {5A69A310-51DF-401C-8625-7C2C688AA8C2}
-		{DD13BD57-1B05-4298-A0F0-EA5729D17989} = {DD13BD57-1B05-4298-A0F0-EA5729D17989}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunProcessAsTask.Tests", "RunProcessAsTask.Tests\RunProcessAsTask.Tests.csproj", "{DD13BD57-1B05-4298-A0F0-EA5729D17989}"
 EndProject

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -11,12 +12,5 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>RunProcessAsTask.xml</DocumentationFile>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <Compile Include="ProcessEx.cs" />
-    <Compile Include="ProcessEx.overloads.cs" />
-    <Compile Include="ProcessResults.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
 
 </Project>

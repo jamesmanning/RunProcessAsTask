@@ -21,27 +21,5 @@ namespace RunProcessAsTask
         {
             return RunAsync(new ProcessStartInfo(fileName, arguments));
         }
-
-        public static Task<ProcessResults> RunAsync(string fileName, string userName, SecureString password, string domain)
-        {
-            return RunAsync(new ProcessStartInfo(fileName)
-            {
-                UserName = userName,
-                Password = password,
-                Domain = domain,
-                UseShellExecute = false
-            });
-        }
-
-        public static Task<ProcessResults> RunAsync(string fileName, string arguments, string userName, SecureString password, string domain)
-        {
-            return RunAsync(new ProcessStartInfo(fileName, arguments)
-            {
-                UserName = userName,
-                Password = password,
-                Domain = domain,
-                UseShellExecute = false
-            });
-        }
     }
 }

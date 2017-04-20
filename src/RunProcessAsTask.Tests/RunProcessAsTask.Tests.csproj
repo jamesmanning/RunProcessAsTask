@@ -4,7 +4,14 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
-  
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>RunProcessAsTask.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>RunProcessAsTask.xml</DocumentationFile>
+  </PropertyGroup>
   
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

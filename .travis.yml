@@ -4,5 +4,5 @@ mono: none
 dotnet: 1.0.1
 dist: trusty
 script:
-  dotnet restore
-  dotnet test
+  - dotnet restore
+  - dotnet test

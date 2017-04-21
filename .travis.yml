@@ -3,6 +3,3 @@ solution: src/RunProcessAsTask.sln
 mono: none
 dotnet: 1.0.1
 dist: trusty
-script:
-  - dotnet restore
-  - dotnet test RunProcessAsTask.Tests.csproj 

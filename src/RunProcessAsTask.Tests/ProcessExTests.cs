@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Internal;
 using System.Threading;
 using System.Threading.Tasks;
-using RunProcessAsTask;
 using Xunit;
 
 namespace RunProcessAsTask.Tests
@@ -23,7 +19,6 @@ namespace RunProcessAsTask.Tests
                                 const int millisecondsToSleep = 5 * 1000; // set a minimum run time so we can validate it as part of the output
                                 const int expectedStandardOutputLineCount = 5;
                                 const int expectedStandardErrorLineCount = 3;
-
                                 var pathToConsoleApp = AppContext.BaseDirectory.Substring(0, AppContext.BaseDirectory.IndexOf("DummyConsoleApp.cs"));
                                 var arguments = String.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
 
@@ -48,17 +43,17 @@ namespace RunProcessAsTask.Tests
 
                                 var expectedStandardOutput = new[]
                                 {
-                                    "Standard output line #1",
-                                    "Standard output line #2",
-                                    "Standard output line #3",
-                                    "Standard output line #4",
-                                    "Standard output line #5",
+                                        "Standard output line #1",
+                                        "Standard output line #2",
+                                        "Standard output line #3",
+                                        "Standard output line #4",
+                                        "Standard output line #5",
                                 };
                                 var expectedStandardError = new[]
                                 {
-                                    "Standard error line #1",
-                                    "Standard error line #2",
-                                    "Standard error line #3",
+                                        "Standard error line #1",
+                                        "Standard error line #2",
+                                        "Standard error line #3",
                                 };
                                 Assert.Equal(expectedStandardOutput, results.StandardOutput);
                                 Assert.Equal(expectedStandardError, results.StandardError);
@@ -115,11 +110,11 @@ namespace RunProcessAsTask.Tests
                                 Assert.Equal(expectedStandardErrorLineCount, results.StandardError.Length);
 
                                 var expectedStandardOutput = Enumerable.Range(1, expectedStandardOutputLineCount)
-                                    .Select(x => "Standard output line #" + x)
-                                    .ToArray();
+                                        .Select(x => "Standard output line #" + x)
+                                        .ToArray();
                                 var expectedStandardError = Enumerable.Range(1, expectedStandardErrorLineCount)
-                                    .Select(x => "Standard error line #" + x)
-                                    .ToArray();
+                                        .Select(x => "Standard error line #" + x)
+                                        .ToArray();
                                 Assert.Equal(expectedStandardOutput, results.StandardOutput);
                                 Assert.Equal(expectedStandardError, results.StandardError);
                         }

@@ -1,34 +1,45 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputType>Library</OutputType>
-  </PropertyGroup>
-  
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>30f3fd69-434c-43e8-9965-5f6cffa348ad</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RunProcessAsTask.Tests</RootNamespace>
+    <AssemblyName>RunProcessAsTask.Tests</AssemblyName>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <ApplicationIcon />
-    <OutputTypeEx>library</OutputTypeEx>
-    <StartupObject />
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>RunProcessAsTask.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>RunProcessAsTask.xml</DocumentationFile>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\DummyConsoleApp\DummyConsoleApp.csproj">
-    </ProjectReference>
-    <ProjectReference Include="..\RunProcessAsTask\RunProcessAsTask.csproj">
-    </ProjectReference>
+    <ProjectReference Include="..\DummyConsoleApp\DummyConsoleApp.csproj"></ProjectReference>
+    <ProjectReference Include="..\RunProcessAsTask\RunProcessAsTask.csproj"></ProjectReference>
   </ItemGroup>
 
 </Project>

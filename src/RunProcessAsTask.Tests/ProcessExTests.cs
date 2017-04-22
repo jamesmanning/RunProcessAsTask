@@ -40,11 +40,12 @@ namespace RunProcessAsTask.Tests
                 Assert.NotNull(results.StandardOutput);
                 Assert.NotNull(results.StandardError);
 
-                Assert.Equal(expectedExitCode, results.ExitCode);
-                Assert.Equal(expectedExitCode, results.Process.ExitCode);
-                Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
-                Assert.Equal(expectedStandardOutputLineCount, results.StandardOutput.Length);
-                Assert.Equal(expectedStandardErrorLineCount, results.StandardError.Length);
+                var expectedStandardError = new[] {
+                    "Standard error line #1",
+                    "Standard error line #2",
+                    "Standard error line #3",
+                };
+                Assert.Equal(expectedStandardError, results.StandardError);
 
                 var expectedStandardOutput = new[] {
                     "Standard output line #1",
@@ -53,13 +54,11 @@ namespace RunProcessAsTask.Tests
                     "Standard output line #4",
                     "Standard output line #5",
                 };
-                var expectedStandardError = new[] {
-                    "Standard error line #1",
-                    "Standard error line #2",
-                    "Standard error line #3",
-                };
                 Assert.Equal(expectedStandardOutput, results.StandardOutput);
-                Assert.Equal(expectedStandardError, results.StandardError);
+
+                Assert.Equal(expectedExitCode, results.ExitCode);
+                Assert.Equal(expectedExitCode, results.Process.ExitCode);
+                Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
             }
 
             [Fact]

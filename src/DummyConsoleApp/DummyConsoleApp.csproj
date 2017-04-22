@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>DummyConsoleApp</RootNamespace>
-    <AssemblyName>DummyConsoleApp</AssemblyName>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>

@@ -2,21 +2,18 @@
   <PropertyGroup>
     <RootNamespace>RunProcessAsTask.Tests</RootNamespace>
     <AssemblyName>RunProcessAsTask.Tests</AssemblyName>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <OutputTypeEx>library</OutputTypeEx>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.console" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+ 
+    <ProjectReference Include="..\RunProcessAsTask\RunProcessAsTask.csproj" />
+    <ProjectReference Include="..\DummyConsoleApp\DummyConsoleApp.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\DummyConsoleApp\DummyConsoleApp.csproj"></ProjectReference>
-    <ProjectReference Include="..\RunProcessAsTask\RunProcessAsTask.csproj"></ProjectReference>
-  </ItemGroup>
-
 </Project>

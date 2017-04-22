@@ -24,7 +24,7 @@ namespace RunProcessAsTask.Tests
                 const int expectedStandardOutputLineCount = 5;
                 const int expectedStandardErrorLineCount = 3;
 
-                var pathToConsoleApp = "C:\\Users\\User\\Source\\Repos\\RunProcessAsTask\\src\\DummyConsoleApp\\bin\\Release\\netcoreapp1.1\\DummyConsoleApp.dll";
+                var pathToConsoleApp = "DummyConsoleApp.dll";
                 var arguments = string.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
 
                 // Act
@@ -83,7 +83,7 @@ namespace RunProcessAsTask.Tests
                 const int millisecondsToSleep = 0; // We want the process to exit right after printing the lines, so no wait time
                 var expectedStandardOutputLineCount = _random.Next(1000, 100 * 1000);
                 var expectedStandardErrorLineCount = _random.Next(1000, 100 * 1000);
-                var pathToConsoleApp = "C:\\Users\\User\\Source\\Repos\\RunProcessAsTask\\src\\DummyConsoleApp\\bin\\Release\\netcoreapp1.1\\DummyConsoleApp.dll";
+                var pathToConsoleApp = "DummyConsoleApp.dll";
                 var arguments = string.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
                 // force no window since there's no value in showing it during a test run
                 var processStartInfo = new ProcessStartInfo("dotnet ", $"{pathToConsoleApp} {arguments}") {

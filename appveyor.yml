@@ -10,8 +10,6 @@ assembly_info:
 environment:
   matrix:
   - platform: x64
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-  - platform: x64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 before_build:
   - nuget restore ".\src\RunProcessAsTask.sln"

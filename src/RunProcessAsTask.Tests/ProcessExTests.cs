@@ -24,11 +24,10 @@ namespace RunProcessAsTask.Tests
                 const int expectedStandardOutputLineCount = 5;
                 const int expectedStandardErrorLineCount = 3;
 
-                var pathToConsoleApp = "DummyConsoleApp.dll";
-                var arguments = string.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
+                var processStartInfo = DummyStartProcessArgs(expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
 
                 // Act
-                var task = ProcessEx.RunAsync("dotnet ", $"{pathToConsoleApp} {arguments}");
+                var task = ProcessEx.RunAsync(processStartInfo);
 
                 // Assert
                 Assert.NotNull(task);
@@ -82,13 +81,8 @@ namespace RunProcessAsTask.Tests
                 const int millisecondsToSleep = 0; // We want the process to exit right after printing the lines, so no wait time
                 var expectedStandardOutputLineCount = _random.Next(1000, 100 * 1000);
                 var expectedStandardErrorLineCount = _random.Next(1000, 100 * 1000);
-                var pathToConsoleApp = "DummyConsoleApp.dll";
-                var arguments = string.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
-                // force no window since there's no value in showing it during a test run
-                var processStartInfo = new ProcessStartInfo("dotnet ", $"{pathToConsoleApp} {arguments}") {
-                    CreateNoWindow = true,
-                    //WindowStyle = ProcessWindowStyle.Hidden,
-                };
+                var processStartInfo = DummyStartProcessArgs(expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
+                processStartInfo.CreateNoWindow = true;
                 // Act
                 var task = ProcessEx.RunAsync(processStartInfo);
 
@@ -118,6 +112,16 @@ namespace RunProcessAsTask.Tests
                 Assert.Equal(expectedStandardError, results.StandardError);
             }
 
+            static ProcessStartInfo DummyStartProcessArgs(
+                int expectedExitCode,
+                int millisecondsToSleep,
+                int expectedStandardOutputLineCount,
+                int expectedStandardErrorLineCount)
+                => new ProcessStartInfo(
+                    "dotnet",
+                    string.Join(" ", "DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
+                );
+
             [Fact]
             public void WhenProcessTimesOut_TaskIsCanceled()
             {
@@ -129,11 +133,10 @@ namespace RunProcessAsTask.Tests
                 const int expectedStandardErrorLineCount = 3;
 
                 // Act
-                var pathToConsoleApp = "C:\\Users\\User\\Source\\Repos\\RunProcessAsTask\\src\\DummyConsoleApp\\bin\\Release\\netcoreapp1.1\\DummyConsoleApp.dll";
-                var arguments = string.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
-                var startInfo = new ProcessStartInfo("dotnet ", $"{pathToConsoleApp} {arguments}");
+
+                var processStartInfo = DummyStartProcessArgs(expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
                 var cancellationToken = new CancellationTokenSource(millisecondsForTimeout).Token;
-                var task = ProcessEx.RunAsync(startInfo, cancellationToken);
+                var task = ProcessEx.RunAsync(processStartInfo, cancellationToken);
                 Assert.NotNull(task);
 
                 // Assert

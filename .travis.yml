@@ -4,7 +4,8 @@ mono: none
 dotnet: 1.0.3
 dist: trusty
 script:
+  - cd src
   - dotnet restore
-  - pushd src/RunProcessAsTask.Tests
+  - cd src/RunProcessAsTask.Tests
   - dotnet test
-  - popd
+  - cd ../..

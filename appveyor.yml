@@ -11,6 +11,6 @@ build:
   project: .\src\RunProcessAsTask.sln
   verbosity: minimal
 test_script:
-  - pushd src/RunProcessAsTask.Tests
+  - pushd src\RunProcessAsTask.Tests
   - dotnet test
   - popd

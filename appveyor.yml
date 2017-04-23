@@ -3,7 +3,7 @@ skip_tags: true
 configuration: Release
 environment:
   matrix:
-  - platform: x64
+  - platform: Any CPU
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 before_build:
   - dotnet restore ".\src\RunProcessAsTask.sln"

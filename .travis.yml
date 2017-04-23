@@ -5,6 +5,6 @@ dotnet: 1.0.3
 dist: trusty
 script:
   - dotnet restore
-  - pushd RunProcessAsTask.Tests
+  - pushd src/RunProcessAsTask.Tests
   - dotnet test
   - popd

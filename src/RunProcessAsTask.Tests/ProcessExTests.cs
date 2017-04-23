@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace RunProcessAsTask.Tests
 {
@@ -11,6 +12,9 @@ namespace RunProcessAsTask.Tests
     {
         public class RunAsyncTests
         {
+            readonly ITestOutputHelper output;
+            public RunAsyncTests(ITestOutputHelper output) => this.output = output;
+
             [Fact]
             public void WhenProcessRunsNormally_ReturnsExpectedResults()
             {
@@ -19,11 +23,11 @@ namespace RunProcessAsTask.Tests
                 const int millisecondsToSleep = 5 * 1000; // set a minimum run time so we can validate it as part of the output
                 const int expectedStandardOutputLineCount = 5;
                 const int expectedStandardErrorLineCount = 3;
-                var pathToConsoleApp = typeof(DummyConsoleApp.Program).Assembly.Location;
-                var arguments = String.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
+
+                var processStartInfo = DummyStartProcessArgs(expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
 
                 // Act
-                var task = ProcessEx.RunAsync(pathToConsoleApp, arguments);
+                var task = ProcessEx.RunAsync(processStartInfo);
 
                 // Assert
                 Assert.NotNull(task);
@@ -35,28 +39,25 @@ namespace RunProcessAsTask.Tests
                 Assert.NotNull(results.StandardOutput);
                 Assert.NotNull(results.StandardError);
 
-                Assert.Equal(expectedExitCode, results.ExitCode);
-                Assert.Equal(expectedExitCode, results.Process.ExitCode);
-                Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
-                Assert.Equal(expectedStandardOutputLineCount, results.StandardOutput.Length);
-                Assert.Equal(expectedStandardErrorLineCount, results.StandardError.Length);
+                var expectedStandardError = new[] {
+                    "Standard error line #1",
+                    "Standard error line #2",
+                    "Standard error line #3",
+                };
+                Assert.Equal(expectedStandardError, results.StandardError);
 
-                var expectedStandardOutput = new[]
-                {
+                var expectedStandardOutput = new[] {
                     "Standard output line #1",
                     "Standard output line #2",
                     "Standard output line #3",
                     "Standard output line #4",
                     "Standard output line #5",
                 };
-                var expectedStandardError = new[]
-                {
-                    "Standard error line #1",
-                    "Standard error line #2",
-                    "Standard error line #3",
-                };
                 Assert.Equal(expectedStandardOutput, results.StandardOutput);
-                Assert.Equal(expectedStandardError, results.StandardError);
+
+                Assert.Equal(expectedExitCode, results.ExitCode);
+                Assert.Equal(expectedExitCode, results.Process.ExitCode);
+                Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
             }
 
             [Fact]
@@ -66,13 +67,11 @@ namespace RunProcessAsTask.Tests
                 // trigger in this test within 5 to 10 seconds, so if it can run for 
                 // 5 minutes and not cause the output-truncation issue, we are probably fine
                 var fiveMinutes = TimeSpan.FromMinutes(5);
-                for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < fiveMinutes; )
-                {
+                for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < fiveMinutes;)
                     Parallel.ForEach(Enumerable.Range(1, 100), index => WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly());
-                }
             }
 
-            private readonly Random _random = new Random();
+            readonly Random _random = new Random();
 
             [Fact]
             public void WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly()
@@ -80,16 +79,10 @@ namespace RunProcessAsTask.Tests
                 // Arrange
                 const int expectedExitCode = 123;
                 const int millisecondsToSleep = 0; // We want the process to exit right after printing the lines, so no wait time
-                int expectedStandardOutputLineCount = _random.Next(1000, 100 * 1000);
-                int expectedStandardErrorLineCount = _random.Next(1000, 100 * 1000);
-                var pathToConsoleApp = typeof(DummyConsoleApp.Program).Assembly.Location;
-                var arguments = String.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
-                // force no window since there's no value in showing it during a test run
-                var processStartInfo = new ProcessStartInfo(pathToConsoleApp, arguments)
-                {
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                };
+                var expectedStandardOutputLineCount = _random.Next(1000, 100 * 1000);
+                var expectedStandardErrorLineCount = _random.Next(1000, 100 * 1000);
+                var processStartInfo = DummyStartProcessArgs(expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
+                processStartInfo.CreateNoWindow = true;
                 // Act
                 var task = ProcessEx.RunAsync(processStartInfo);
 
@@ -119,6 +112,16 @@ namespace RunProcessAsTask.Tests
                 Assert.Equal(expectedStandardError, results.StandardError);
             }
 
+            static ProcessStartInfo DummyStartProcessArgs(
+                int expectedExitCode,
+                int millisecondsToSleep,
+                int expectedStandardOutputLineCount,
+                int expectedStandardErrorLineCount)
+                => new ProcessStartInfo(
+                    "dotnet",
+                    string.Join(" ", "DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
+                );
+
             [Fact]
             public void WhenProcessTimesOut_TaskIsCanceled()
             {
@@ -130,11 +133,10 @@ namespace RunProcessAsTask.Tests
                 const int expectedStandardErrorLineCount = 3;
 
                 // Act
-                var pathToConsoleApp = typeof(DummyConsoleApp.Program).Assembly.Location;
-                var arguments = String.Join(" ", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
-                var startInfo = new ProcessStartInfo(pathToConsoleApp, arguments);
+
+                var processStartInfo = DummyStartProcessArgs(expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
                 var cancellationToken = new CancellationTokenSource(millisecondsForTimeout).Token;
-                var task = ProcessEx.RunAsync(startInfo, cancellationToken);
+                var task = ProcessEx.RunAsync(processStartInfo, cancellationToken);
                 Assert.NotNull(task);
 
                 // Assert

@@ -1,5 +1,11 @@
 language: csharp
 solution: src/RunProcessAsTask.sln
+mono: none
+dotnet: 1.0.3
+dist: trusty
 script:
-  - xbuild /p:Configuration=Release src/RunProcessAsTask.sln
-  - mono ./src/packages/xunit.runner.console.*/tools/xunit.console.exe ./src/RunProcessAsTask.Tests/bin/Release/RunProcessAsTask.Tests.dll
+  - cd src
+  - dotnet restore
+  - cd RunProcessAsTask.Tests
+  - dotnet xunit
+  - cd ../..

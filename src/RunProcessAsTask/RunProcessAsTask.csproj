@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
-    <Authors>jamesmanning</Authors>
+    <Authors>James Manning and contributors</Authors>
     <Description>
       Simple wrapper around System.Diagnostics.Process to expose it as a System.Threading.Tasks.Task&lt;ProcessResults&gt;
 

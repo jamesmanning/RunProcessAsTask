@@ -18,6 +18,7 @@ namespace RunProcessAsTask
             processStartInfo.RedirectStandardOutput = true;
             processStartInfo.RedirectStandardError = true;
 
+            DateTime StartTime = DateTime.Now;
             var tcs = new TaskCompletionSource<ProcessResults>();
 
             var standardOutput = new List<string>();
@@ -47,7 +48,7 @@ namespace RunProcessAsTask
             process.Exited += (sender, args) => {
                 // Since the Exited event can happen asynchronously to the output and error events, 
                 // we use the task results for stdout/stderr to ensure they both closed
-                tcs.TrySetResult(new ProcessResults(process, standardOutputResults.Task.Result, standardErrorResults.Task.Result));
+                tcs.TrySetResult(new ProcessResults(process, standardOutputResults.Task.Result, standardErrorResults.Task.Result, StartTime));
             };
 
             using (cancellationToken.Register(

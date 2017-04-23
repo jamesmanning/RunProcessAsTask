@@ -148,6 +148,35 @@ namespace RunProcessAsTask.Tests
                 Assert.True(cancellationToken.IsCancellationRequested);
                 Assert.Equal(TaskStatus.Canceled, task.Status);
             }
+
+            [Fact]
+            public void WhenProcessIsFinished_CheckStartTimeAndEndTime()
+            {
+                const int expectedExitCode = 123;
+                DateTime timeBeforeExpectedStartTime = DateTime.Now;
+                const int millisecondsToSleep = 5 * 1000; // set a minimum run time so we can validate it as part of the output
+                const int expectedStandardOutputLineCount = 5;
+                const int expectedStandardErrorLineCount = 3;
+
+                var processStartInfo = DummyStartProcessArgs(expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount);
+
+                // Act
+                var task = ProcessEx.RunAsync(processStartInfo);
+
+                // Assert
+                Assert.NotNull(task);
+                var results = task.Result;
+                Assert.NotNull(results);
+                Assert.NotNull(results.StartTime);
+                Assert.NotNull(results.RunTime);
+
+                Assert.True(timeBeforeExpectedStartTime <= results.StartTime);
+                Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
+
+                var endtime = results.StartTime + results.RunTime;
+                Assert.True(results.StartTime < endtime);
+                Assert.Equal(TaskStatus.RanToCompletion, task.Status);
+            }
         }
     }
 }

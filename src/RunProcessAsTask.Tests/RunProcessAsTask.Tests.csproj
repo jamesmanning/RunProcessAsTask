@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <OutputType>Library</OutputType>
+    <OutputPath>..\Build</OutputPath><!-- same dir as dummy-app -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
  
     <ProjectReference Include="..\RunProcessAsTask\RunProcessAsTask.csproj" />
-    <ProjectReference Include="..\DummyConsoleApp\DummyConsoleApp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

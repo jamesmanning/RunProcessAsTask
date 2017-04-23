@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
     <Authors>jamesmanning</Authors>
     <Description>
       Simple wrapper around System.Diagnostics.Process to expose it as a System.Threading.Tasks.Task&lt;ProcessResults&gt;
@@ -15,7 +15,7 @@
     <PackageTags>Process Async Task</PackageTags>
     <PackageReleaseNotes>Added support for .net standard 1.4</PackageReleaseNotes>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
   </ItemGroup>
 </Project>

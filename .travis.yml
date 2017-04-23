@@ -6,6 +6,6 @@ dist: trusty
 script:
   - cd src
   - dotnet restore
-  - cd src/RunProcessAsTask.Tests
+  - cd RunProcessAsTask.Tests
   - dotnet test
   - cd ../..

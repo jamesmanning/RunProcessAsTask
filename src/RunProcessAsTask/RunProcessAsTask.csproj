@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
-    <Authors>James Manning and contributors</Authors>
+    <Authors>James Manning, Max Cheetham and Eamon Nerbonne</Authors>
     <Description>
       Simple wrapper around System.Diagnostics.Process to expose it as a System.Threading.Tasks.Task&lt;ProcessResults&gt;
 
@@ -12,7 +12,6 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jamesmanning/RunProcessAsTask/</PackageProjectUrl>
-    <PackageTags>Process Async Task</PackageTags>
     <PackageReleaseNotes>Added support for .net standard 1.4</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">

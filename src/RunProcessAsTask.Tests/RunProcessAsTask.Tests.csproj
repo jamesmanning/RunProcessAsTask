@@ -14,6 +14,7 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-*" />
     
     <ProjectReference Include="..\RunProcessAsTask\RunProcessAsTask.csproj" />
+    <ProjectReference Include="..\Build\netcoreapp1.1\DummyConsoleApp.dll" />
   </ItemGroup>
 
   <ItemGroup>

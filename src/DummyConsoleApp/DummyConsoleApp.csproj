@@ -2,6 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <OutputType>Exe</OutputType>
-    <OutputPath>..\Build</OutputPath>
+    <OutputPath>../Build</OutputPath>
   </PropertyGroup>
 </Project>

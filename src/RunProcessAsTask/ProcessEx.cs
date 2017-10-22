@@ -44,10 +44,12 @@ namespace RunProcessAsTask
                     standardErrorResults.SetResult(standardError.ToArray());
             };
 
+            var processStartTime = new TaskCompletionSource<DateTime>();
+
             process.Exited += (sender, args) => {
                 // Since the Exited event can happen asynchronously to the output and error events, 
                 // we use the task results for stdout/stderr to ensure they both closed
-                tcs.TrySetResult(new ProcessResults(process, standardOutputResults.Task.Result, standardErrorResults.Task.Result));
+                tcs.TrySetResult(new ProcessResults(process, processStartTime.Task.Result, standardOutputResults.Task.Result, standardErrorResults.Task.Result));
             };
 
             using (cancellationToken.Register(
@@ -62,6 +64,7 @@ namespace RunProcessAsTask
 
                 if (process.Start() == false)
                     tcs.TrySetException(new InvalidOperationException("Failed to start process"));
+                processStartTime.SetResult(process.StartTime);
 
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();

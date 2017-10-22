@@ -7,11 +7,11 @@ namespace RunProcessAsTask
 {
     public sealed class ProcessResults : IDisposable
     {
-        public ProcessResults(Process process, string[] standardOutput, string[] standardError)
+        public ProcessResults(Process process, DateTime processStartTime, string[] standardOutput, string[] standardError)
         {
             Process = process;
             ExitCode = process.ExitCode;
-            RunTime = process.ExitTime - process.StartTime;
+            RunTime = process.ExitTime - processStartTime;
             StandardOutput = standardOutput;
             StandardError = standardError;
         }

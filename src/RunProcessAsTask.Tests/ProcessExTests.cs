@@ -60,7 +60,7 @@ namespace RunProcessAsTask.Tests
                 Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
             }
 
-            [Fact]
+            [Fact(Skip = "Takes too long to use normally")]
             public void RunLotsOfOutputForFiveMinutes()
             {
                 // when this problem manifested with the older code, it would normally 
@@ -141,7 +141,7 @@ namespace RunProcessAsTask.Tests
 
                 // Assert
                 var aggregateException = Assert.Throws<AggregateException>(() => task.Result);
-                Assert.Equal(1, aggregateException.InnerExceptions.Count);
+                Assert.Single(aggregateException.InnerExceptions);
                 var innerException = aggregateException.InnerExceptions.Single();
                 var canceledException = Assert.IsType<TaskCanceledException>(innerException);
                 Assert.NotNull(canceledException);

@@ -48,7 +48,7 @@ namespace RunProcessAsTask
 
             process.Exited += async (sender, args) => {
                 // Since the Exited event can happen asynchronously to the output and error events, 
-                // we use await the task results for stdout/stderr to ensure they both closed
+                // we await the task results for stdout/stderr to ensure they both closed
                 tcs.TrySetResult(new ProcessResults(process, await processStartTime.Task, await standardOutputResults.Task, await standardErrorResults.Task));
             };
 

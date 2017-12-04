@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -46,10 +46,10 @@ namespace RunProcessAsTask
 
             var processStartTime = new TaskCompletionSource<DateTime>();
 
-            process.Exited += (sender, args) => {
+            process.Exited += async (sender, args) => {
                 // Since the Exited event can happen asynchronously to the output and error events, 
-                // we use the task results for stdout/stderr to ensure they both closed
-                tcs.TrySetResult(new ProcessResults(process, processStartTime.Task.Result, standardOutputResults.Task.Result, standardErrorResults.Task.Result));
+                // we await the task results for stdout/stderr to ensure they both closed
+                tcs.TrySetResult(new ProcessResults(process, await processStartTime.Task, await standardOutputResults.Task, await standardErrorResults.Task));
             };
 
             using (cancellationToken.Register(

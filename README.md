@@ -22,6 +22,8 @@ To install into your project:
 PM> Install-Package RunProcessAsTask
 ```
 
+NOTE: if you need to handle stdout/stderr as they happen (while the process is still running), you may want to use Process directly or look at the [CliWrap](https://github.com/Tyrrrz/CliWrap) project
+
 # Example Usages
 
 ## Synchronous, just easier way of grabbing output / error / runtime for the process

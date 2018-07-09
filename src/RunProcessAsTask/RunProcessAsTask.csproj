@@ -8,11 +8,11 @@
 
       Includes support for cancellation, timeout (via cancellation), and exposes the standard output, standard error, exit code, and run time of the process.
     </Description>
-    <Version>1.2.2</Version>
+    <Version>1.2.3</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jamesmanning/RunProcessAsTask/</PackageProjectUrl>
-    <PackageReleaseNotes>Added ConfigureAwait(false) to all await calls</PackageReleaseNotes>
+    <PackageReleaseNotes>Add support for passing in external lists for stdout/stderr collecting, fix corner case for processes that complete too quickly</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />

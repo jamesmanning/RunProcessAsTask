@@ -8,14 +8,6 @@ namespace RunProcessAsTask
 {
     public static partial class ProcessEx
     {
-        public static Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo) 
-            => RunAsync(processStartInfo, CancellationToken.None);
-
-        public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, CancellationToken cancellationToken)
-        {
-            return await RunAsync(processStartInfo, new List<string>(), new List<string>(), cancellationToken);
-        }
-
         public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, List<string> standardOutput, List<string> standardError, CancellationToken cancellationToken)
         {
             // force some settings in the start info so we can capture the output
@@ -73,12 +65,27 @@ namespace RunProcessAsTask
                 })) {
                 cancellationToken.ThrowIfCancellationRequested();
 
+                var startTime = DateTime.Now;
                 if (process.Start() == false)
+                {
                     tcs.TrySetException(new InvalidOperationException("Failed to start process"));
-                processStartTime.SetResult(process.StartTime);
+                }
+                else
+                {
+                    try
+                    {
+                        startTime = process.StartTime;
+                    }
+                    catch (Exception)
+                    {
+                        // best effort to try and get a more accurate start time, but if we fail to access StartTime
+                        // (for instance, process has already existed), we still have a valid value to use.
+                    }
+                    processStartTime.SetResult(startTime);
 
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                }
 
                 return await tcs.Task.ConfigureAwait(false);
             }

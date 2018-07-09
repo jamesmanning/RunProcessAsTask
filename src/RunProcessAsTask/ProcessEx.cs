@@ -13,15 +13,17 @@ namespace RunProcessAsTask
 
         public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, CancellationToken cancellationToken)
         {
+            return await RunAsync(processStartInfo, new List<string>(), new List<string>(), cancellationToken);
+        }
+
+        public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, List<string> standardOutput, List<string> standardError, CancellationToken cancellationToken)
+        {
             // force some settings in the start info so we can capture the output
             processStartInfo.UseShellExecute = false;
             processStartInfo.RedirectStandardOutput = true;
             processStartInfo.RedirectStandardError = true;
 
             var tcs = new TaskCompletionSource<ProcessResults>();
-
-            var standardOutput = new List<string>();
-            var standardError = new List<string>();
 
             var process = new Process {
                 StartInfo = processStartInfo,

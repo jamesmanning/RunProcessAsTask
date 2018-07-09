@@ -53,7 +53,14 @@ namespace RunProcessAsTask
                 // we await the task results for stdout/stderr to ensure they both closed.  We must await
                 // the stdout/stderr tasks instead of just accessing the Result property due to behavior on MacOS.  
                 // For more details, see the PR at https://github.com/jamesmanning/RunProcessAsTask/pull/16/
-                tcs.TrySetResult(new ProcessResults(process, await processStartTime.Task.ConfigureAwait(false), await standardOutputResults.Task.ConfigureAwait(false), await standardErrorResults.Task.ConfigureAwait(false)));
+                tcs.TrySetResult(
+                    new ProcessResults(
+                        process, 
+                        await processStartTime.Task.ConfigureAwait(false), 
+                        await standardOutputResults.Task.ConfigureAwait(false), 
+                        await standardErrorResults.Task.ConfigureAwait(false)
+                    )
+                );
             };
 
             using (cancellationToken.Register(

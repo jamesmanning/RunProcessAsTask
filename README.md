@@ -29,7 +29,7 @@ NOTE: if you need to handle stdout/stderr as they happen (while the process is s
 ## Synchronous, just easier way of grabbing output / error / runtime for the process
 
 ```csharp
-var processResults = ProcessEx.RunAsync("git.exe", "pull").Result;
+Task<ProcessResults> processResults = ProcessEx.RunAsync("git.exe", "pull").Result;
 
 Console.WriteLine("Exit code: " + processResults.ExitCode);
 Console.WriteLine("Run time: " + processResults.RunTime);

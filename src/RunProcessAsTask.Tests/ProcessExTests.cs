@@ -119,7 +119,7 @@ namespace RunProcessAsTask.Tests
                 int expectedStandardErrorLineCount)
                 => new ProcessStartInfo(
                     "dotnet",
-                    string.Join(" ", "DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
+                    string.Join(" ", "..\\netcoreapp2.2\\DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
                 );
 
             [Fact]

@@ -1,11 +1,11 @@
 language: csharp
-solution: src/RunProcessAsTask.sln
+sudo: required
 mono: none
-dotnet: 1.0.3
-dist: trusty
+dist: xenial
+dotnet: 2.2.300
+os:
+  - osx
+  - linux
 script:
-  - cd src
-  - dotnet restore
-  - cd RunProcessAsTask.Tests
-  - dotnet xunit
-  - cd ../..
+  - dotnet build -c Release /m src
+  - dotnet test -c Release --no-build src

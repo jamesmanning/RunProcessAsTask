@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;netcoreapp2.2;net472;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.1;netcoreapp2.2;</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net472;$(TargetFrameworks)</TargetFrameworks>
     <OutputType>Library</OutputType>
     <OutputPath>..\Build</OutputPath><!-- same dir as dummy-app -->
   </PropertyGroup>

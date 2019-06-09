@@ -122,8 +122,11 @@ namespace RunProcessAsTask.Tests
                 int expectedStandardErrorLineCount)
                 => new ProcessStartInfo(
                     "dotnet",
-                    string.Join(" ", "..\\netcoreapp2.2\\DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
-                );
+                    string.Join(" ", "../netcoreapp2.2/DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
+                )
+                {
+                    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                };
 
             [Fact]
             public void WhenProcessTimesOut_TaskIsCanceled()

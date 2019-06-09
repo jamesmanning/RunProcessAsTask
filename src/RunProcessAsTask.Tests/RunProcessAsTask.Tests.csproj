@@ -9,6 +9,7 @@
   <PropertyGroup>
     <CollectCoverage>false</CollectCoverage>
     <CoverletOutputFormat>opencover</CoverletOutputFormat>
+    <Exclude>[xunit.*]*,[DummyConsoleApp]*</Exclude>
   </PropertyGroup>
 
   <ItemGroup>

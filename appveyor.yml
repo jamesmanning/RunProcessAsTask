@@ -1,16 +1,18 @@
 version: 1.0.{build}
+image: Visual Studio 2017
+pull_requests:
+    do_not_increment_build_number: true
+branches:
+    only:
+        - master
 skip_tags: true
 configuration: Release
-environment:
-  matrix:
-  - platform: Any CPU
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-before_build:
-  - dotnet restore ".\src\RunProcessAsTask.sln"
-build:
-  project: .\src\RunProcessAsTask.sln
-  verbosity: minimal
+build_script:
+    - cmd: dotnet build -c Release /m src
 test_script:
-  - cd src\RunProcessAsTask.Tests
-  - dotnet test
-  - cd ..\..
+    - cmd: dotnet test -c Release --no-build src
+after_test:
+    - dotnet test -c Release --no-build src/RunProcessAsTask.Tests -f netcoreapp2.2 /p:CollectCoverage=true
+    - choco install codecov
+    - codecov -h
+    - codecov -f "src/RunProcessAsTask.Tests/coverage.opencover.xml"

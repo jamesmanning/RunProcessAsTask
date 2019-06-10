@@ -60,13 +60,16 @@ namespace RunProcessAsTask.Tests
                 Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
             }
 
-            [Fact]
-            public void RunLotsOfOutputForFiveMinutes()
+            [Theory]
+            [InlineData(10)]
+            //[InlineData(60)]
+            //[InlineData(300)]
+            public void RunLotsOfOutputForPeriod(int seconds)
             {
                 // when this problem manifested with the older code, it would normally 
                 // trigger in this test within 5 to 10 seconds, so if it can run for 
                 // 5 minutes and not cause the output-truncation issue, we are probably fine
-                var fiveMinutes = TimeSpan.FromMinutes(5);
+                var fiveMinutes = TimeSpan.FromSeconds(seconds);
                 for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < fiveMinutes;)
                     Parallel.ForEach(Enumerable.Range(1, 100), index => WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly());
             }
@@ -119,8 +122,11 @@ namespace RunProcessAsTask.Tests
                 int expectedStandardErrorLineCount)
                 => new ProcessStartInfo(
                     "dotnet",
-                    string.Join(" ", "DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
-                );
+                    string.Join(" ", "../netcoreapp2.2/DummyConsoleApp.dll", expectedExitCode, millisecondsToSleep, expectedStandardOutputLineCount, expectedStandardErrorLineCount)
+                )
+                {
+                    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                };
 
             [Fact]
             public void WhenProcessTimesOut_TaskIsCanceled()

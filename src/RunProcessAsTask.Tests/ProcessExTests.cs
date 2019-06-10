@@ -60,17 +60,14 @@ namespace RunProcessAsTask.Tests
                 Assert.True(results.RunTime.TotalMilliseconds >= millisecondsToSleep);
             }
 
-            [Theory]
-            [InlineData(10)]
-            //[InlineData(60)]
-            //[InlineData(300)]
-            public void RunLotsOfOutputForPeriod(int seconds)
+            [Fact]
+            public void RunLotsOfOutputForPeriod()
             {
                 // when this problem manifested with the older code, it would normally 
                 // trigger in this test within 5 to 10 seconds, so if it can run for 
-                // 5 minutes and not cause the output-truncation issue, we are probably fine
-                var fiveMinutes = TimeSpan.FromSeconds(seconds);
-                for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < fiveMinutes;)
+                // a full minute and not cause the output-truncation issue, we are probably fine
+                var oneMinute = TimeSpan.FromMinutes(1);
+                for (var stopwatch = Stopwatch.StartNew(); stopwatch.Elapsed < oneMinute;)
                     Parallel.ForEach(Enumerable.Range(1, 100), index => WhenProcessReturnsLotsOfOutput_AllOutputCapturedCorrectly());
             }
 

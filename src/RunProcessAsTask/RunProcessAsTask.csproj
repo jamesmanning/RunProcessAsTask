@@ -9,7 +9,7 @@
 
       Includes support for cancellation, timeout (via cancellation), and exposes the standard output, standard error, exit code, and run time of the process.
     </Description>
-    <Version>1.2.3</Version>
+    <Version>1.2.4</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/jamesmanning/RunProcessAsTask/</PackageProjectUrl>

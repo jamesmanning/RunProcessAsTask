@@ -8,7 +8,7 @@ namespace RunProcessAsTask
 {
     public static partial class ProcessEx
     {
-        public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, List<string> standardOutput, List<string> standardError, CancellationToken cancellationToken)
+        public static Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, List<string> standardOutput, List<string> standardError, CancellationToken cancellationToken)
         {
             // force some settings in the start info so we can capture the output
             processStartInfo.UseShellExecute = false;
@@ -41,15 +41,15 @@ namespace RunProcessAsTask
             var processStartTime = new TaskCompletionSource<DateTime>();
 
             process.Exited += async (sender, args) => {
-                // Since the Exited event can happen asynchronously to the output and error events, 
+                // Since the Exited event can happen asynchronously to the output and error events,
                 // we await the task results for stdout/stderr to ensure they both closed.  We must await
-                // the stdout/stderr tasks instead of just accessing the Result property due to behavior on MacOS.  
+                // the stdout/stderr tasks instead of just accessing the Result property due to behavior on MacOS.
                 // For more details, see the PR at https://github.com/jamesmanning/RunProcessAsTask/pull/16/
                 tcs.TrySetResult(
                     new ProcessResults(
-                        process, 
-                        await processStartTime.Task.ConfigureAwait(false), 
-                        await standardOutputResults.Task.ConfigureAwait(false), 
+                        process,
+                        await processStartTime.Task.ConfigureAwait(false),
+                        await standardOutputResults.Task.ConfigureAwait(false),
                         await standardErrorResults.Task.ConfigureAwait(false)
                     )
                 );
@@ -87,7 +87,7 @@ namespace RunProcessAsTask
                     process.BeginErrorReadLine();
                 }
 
-                return await tcs.Task.ConfigureAwait(false);
+                return tcs.Task;
             }
         }
     }

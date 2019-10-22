@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace RunProcessAsTask
 {
     public sealed class ProcessResults : IDisposable
     {
+        /// <summary>
+        /// Contains information about terminated process.
+        /// </summary>
         public ProcessResults(Process process, DateTime processStartTime, string[] standardOutput, string[] standardError)
         {
             Process = process;

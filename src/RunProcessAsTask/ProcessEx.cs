@@ -11,10 +11,10 @@ namespace RunProcessAsTask
         /// <summary>
         /// Runs asynchronous process.
         /// </summary>
-        /// <param name="processStartInfo">Specifies a set of values that are used when you start a process.</param>
-        /// <param name="standardOutput"></param>
-        /// <param name="standardError"></param>
-        /// <param name="cancellationToken">Notification to cancel this process.</param>
+        /// <param name="processStartInfo">The <see cref="T:System.Diagnostics.ProcessStartInfo" /> that contains the information that is used to start the process, including the file name and any command-line arguments.</param>
+        /// <param name="standardOutput">List that lines written to standard output by the process will be added to</param>
+        /// <param name="standardError">List that lines written to standard error by the process will be added to</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, List<string> standardOutput, List<string> standardError, CancellationToken cancellationToken)
         {
             // force some settings in the start info so we can capture the output

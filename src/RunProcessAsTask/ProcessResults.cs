@@ -3,11 +3,11 @@ using System.Diagnostics;
 
 namespace RunProcessAsTask
 {
+    /// <summary>
+    /// Contains information about process after it has exited.
+    /// </summary>
     public sealed class ProcessResults : IDisposable
     {
-        /// <summary>
-        /// Contains information about process after it has exited.
-        /// </summary>
         public ProcessResults(Process process, DateTime processStartTime, string[] standardOutput, string[] standardError)
         {
             Process = process;

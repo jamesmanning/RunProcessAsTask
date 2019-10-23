@@ -8,6 +8,13 @@ namespace RunProcessAsTask
 {
     public static partial class ProcessEx
     {
+        /// <summary>
+        /// Runs asynchronous process.
+        /// </summary>
+        /// <param name="processStartInfo">Specifies a set of values that are used when you start a process.</param>
+        /// <param name="standardOutput"></param>
+        /// <param name="standardError"></param>
+        /// <param name="cancellationToken">Notification to cancel this process.</param>
         public static async Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo, List<string> standardOutput, List<string> standardError, CancellationToken cancellationToken)
         {
             // force some settings in the start info so we can capture the output

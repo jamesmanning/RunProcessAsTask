@@ -6,7 +6,7 @@ namespace RunProcessAsTask
     public sealed class ProcessResults : IDisposable
     {
         /// <summary>
-        /// Contains information about terminated process.
+        /// Contains information about process after it has exited.
         /// </summary>
         public ProcessResults(Process process, DateTime processStartTime, string[] standardOutput, string[] standardError)
         {

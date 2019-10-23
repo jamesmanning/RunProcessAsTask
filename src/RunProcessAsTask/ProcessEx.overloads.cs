@@ -45,7 +45,6 @@ namespace RunProcessAsTask
         /// Runs asynchronous process.
         /// </summary>
         /// <param name="processStartInfo">The <see cref="T:System.Diagnostics.ProcessStartInfo" /> that contains the information that is used to start the process, including the file name and any command-line arguments.</param>
-
         public static Task<ProcessResults> RunAsync(ProcessStartInfo processStartInfo)
             => RunAsync(processStartInfo, CancellationToken.None);
 

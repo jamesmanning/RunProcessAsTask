@@ -8,6 +8,8 @@ namespace RunProcessAsTask
 {
     public static partial class ProcessEx
     {
+        private static readonly TimeSpan _processExitGraceTime = TimeSpan.FromSeconds(30);
+        
         /// <summary>
         /// Runs asynchronous process.
         /// </summary>
@@ -64,11 +66,25 @@ namespace RunProcessAsTask
 
             using (cancellationToken.Register(
                 () => {
-                    tcs.TrySetCanceled();
-                    try {
+                    try
+                    {
                         if (!process.HasExited)
+                        {
                             process.Kill();
-                    } catch (InvalidOperationException) { }
+                            if (!process.WaitForExit(_processExitGraceTime.Milliseconds))
+                            {
+                                throw new TimeoutException($"Timed out after {_processExitGraceTime.TotalSeconds:N2} seconds waiting for cancelled process to exit: {process}");
+                            }
+                        }
+                        tcs.TrySetCanceled();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                    catch (Exception exception)
+                    {
+                        tcs.SetException(new Exception($"Failed to kill process '{process}' upon cancellation", exception));
+                    }
                 })) {
                 cancellationToken.ThrowIfCancellationRequested();
 

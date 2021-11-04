@@ -76,7 +76,7 @@ namespace RunProcessAsTask
             process.Exited += OnExited;
 
             using (cancellationToken.Register(
-                () => {
+                async () => {
                     try
                     {
                         if (!process.HasExited)
@@ -85,9 +85,10 @@ namespace RunProcessAsTask
                             process.ErrorDataReceived -= ErrorDataReceived;
                             process.Exited -= OnExited;
                             process.Kill();
-                            if (!process.WaitForExit(_processExitGraceTime.Milliseconds))
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                            if (!process.HasExited)
                             {
-                                if (!process.HasExited)
+                                if (!process.WaitForExit(_processExitGraceTime.Milliseconds))
                                 {
                                     throw new TimeoutException($"Timed out after {_processExitGraceTime.TotalSeconds:N2} seconds waiting for cancelled process to exit: {process}");
                                 }

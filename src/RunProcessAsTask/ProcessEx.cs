@@ -8,6 +8,8 @@ namespace RunProcessAsTask
 {
     public static partial class ProcessEx
     {
+        private static readonly TimeSpan _processExitGraceTime = TimeSpan.FromSeconds(30);
+        
         /// <summary>
         /// Runs asynchronous process.
         /// </summary>
@@ -30,24 +32,33 @@ namespace RunProcessAsTask
             };
 
             var standardOutputResults = new TaskCompletionSource<string[]>();
-            process.OutputDataReceived += (sender, args) => {
+
+            void OutputDataReceived(object sender, DataReceivedEventArgs args)
+            {
                 if (args.Data != null)
                     standardOutput.Add(args.Data);
                 else
                     standardOutputResults.SetResult(standardOutput.ToArray());
-            };
+            }
+
+            process.OutputDataReceived += OutputDataReceived;
 
             var standardErrorResults = new TaskCompletionSource<string[]>();
-            process.ErrorDataReceived += (sender, args) => {
+
+            void ErrorDataReceived(object sender, DataReceivedEventArgs args)
+            {
                 if (args.Data != null)
                     standardError.Add(args.Data);
                 else
                     standardErrorResults.SetResult(standardError.ToArray());
-            };
+            }
+
+            process.ErrorDataReceived += ErrorDataReceived;
 
             var processStartTime = new TaskCompletionSource<DateTime>();
 
-            process.Exited += async (sender, args) => {
+            async void OnExited(object sender, EventArgs args)
+            {
                 // Since the Exited event can happen asynchronously to the output and error events, 
                 // we await the task results for stdout/stderr to ensure they both closed.  We must await
                 // the stdout/stderr tasks instead of just accessing the Result property due to behavior on MacOS.  
@@ -60,15 +71,38 @@ namespace RunProcessAsTask
                         await standardErrorResults.Task.ConfigureAwait(false)
                     )
                 );
-            };
+            }
+
+            process.Exited += OnExited;
 
             using (cancellationToken.Register(
-                () => {
-                    tcs.TrySetCanceled();
-                    try {
+                async () => {
+                    try
+                    {
                         if (!process.HasExited)
+                        {
+                            process.OutputDataReceived -= OutputDataReceived;
+                            process.ErrorDataReceived -= ErrorDataReceived;
+                            process.Exited -= OnExited;
                             process.Kill();
-                    } catch (InvalidOperationException) { }
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                            if (!process.HasExited)
+                            {
+                                if (!process.WaitForExit(_processExitGraceTime.Milliseconds))
+                                {
+                                    throw new TimeoutException($"Timed out after {_processExitGraceTime.TotalSeconds:N2} seconds waiting for cancelled process to exit: {process}");
+                                }
+                            }
+                        }
+                        tcs.TrySetCanceled();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                    catch (Exception exception)
+                    {
+                        tcs.SetException(new Exception($"Failed to kill process '{process.StartInfo.FileName}' ({process.Id}) upon cancellation", exception));
+                    }
                 })) {
                 cancellationToken.ThrowIfCancellationRequested();
 
